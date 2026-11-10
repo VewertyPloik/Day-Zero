@@ -1868,7 +1868,6 @@ function buildCampaignScene() {
     plateWarn: new THREE.MeshBasicMaterial({color:0xffcc00}),
     plateDeep: new THREE.MeshBasicMaterial({color:0x3a0808})
   };
-  // Roof
   const roof = new THREE.Mesh(new THREE.PlaneGeometry(CAMP.ROOF_EXT*2, CAMP.ROOF_EXT*2), MAT.concrete);
   roof.rotation.x = -Math.PI/2;
   campGroup.add(roof);
@@ -1878,7 +1877,6 @@ function buildCampaignScene() {
     const s2 = new THREE.Mesh(new THREE.BoxGeometry(CAMP.ROOF_EXT*2,0.02,0.08), MAT.concreteDark);
     s2.position.set(0,0.011,i); campGroup.add(s2);
   }
-  // Fence
   function makeChainTex(){
     const cv = document.createElement('canvas'); cv.width=cv.height=64;
     const ctx = cv.getContext('2d'); ctx.clearRect(0,0,64,64);
@@ -1905,7 +1903,6 @@ function buildCampaignScene() {
   fenceSide(-F, F, F, F+0.05);
   fenceSide(-F-0.05, -F, -F, F);
   fenceSide(F, F+0.05, -F, F);
-  // Posts
   const POST = new THREE.CylinderGeometry(0.06,0.06,1.7,6);
   for (let i=-F;i<=F;i+=2.5){
     if (!(i>=-2 && i<=2)){ const p=new THREE.Mesh(POST,MAT.fence); p.position.set(i,0.85,-F); campGroup.add(p); }
@@ -1914,7 +1911,6 @@ function buildCampaignScene() {
     const p3=new THREE.Mesh(POST,MAT.fence); p3.position.set(F,0.85,i); campGroup.add(p3);
   }
   [-2,2].forEach(x=>{ const p=new THREE.Mesh(POST,MAT.fence); p.position.set(x,0.85,-F); campGroup.add(p); });
-  // Rails
   function rails(x1,z1,x2,z2){
     const len=Math.hypot(x2-x1,z2-z1); if (len<0.1) return;
     const horiz=Math.abs(x2-x1)>Math.abs(z2-z1);
@@ -1923,7 +1919,6 @@ function buildCampaignScene() {
   }
   rails(-F,-F,-2,-F); rails(2,-F,F,-F);
   rails(-F,F,F,F); rails(-F,-F,-F,F); rails(F,-F,F,F);
-  // Room
   const RM = CAMP.ROOM, AL = CAMP.ALCOVE;
   const floor=new THREE.Mesh(new THREE.PlaneGeometry(RM.xMax-RM.xMin, RM.zMax-RM.zMin), MAT.concreteDark);
   floor.rotation.x=-Math.PI/2; floor.position.set(0,RM.y,(RM.zMin+RM.zMax)/2); campGroup.add(floor);
@@ -1941,12 +1936,10 @@ function buildCampaignScene() {
   wall(AL.xMin-0.3, AL.xMin, AL.zMin, AL.zMax, RM.y, RM.y+4);
   wall(AL.xMax, AL.xMax+0.3, AL.zMin, AL.zMax, RM.y, RM.y+4);
   wall(AL.xMin-0.3, AL.xMax+0.3, AL.zMin-0.3, AL.zMin, RM.y, RM.y+4);
-  // South wall with slot
   wall(RM.xMin-0.4, CAMP.SW_GAP_L, -18.4, -18, RM.y, 8);
   wall(CAMP.SW_GAP_R, RM.xMax+0.4, -18.4, -18, RM.y, 8);
   wall(CAMP.SW_GAP_L, CAMP.SW_GAP_R, -18.4, -18, RM.y, 0);
   wall(CAMP.SW_GAP_L, CAMP.SW_GAP_R, -18.4, -18, 5, 8);
-  // Ladder
   const ladderBase = CAMP.ROOM.y, ladderTop = CAMP.LADDER.topY;
   const ladderH = ladderTop - ladderBase;
   [-0.3, 0.3].forEach(off=>{
@@ -1965,7 +1958,6 @@ function buildCampaignScene() {
   topGlow.position.set(CAMP.LADDER.x, 4.4, CAMP.LADDER.z); topGlow.scale.set(2.2,2.2,1); campGroup.add(topGlow);
   const botGlow = new THREE.Sprite(new THREE.SpriteMaterial({map:GLOW_TEX,color:0x60a0ff,blending:THREE.AdditiveBlending,transparent:true,opacity:0.42,depthWrite:false,fog:false}));
   botGlow.position.set(CAMP.LADDER.x, RM.y+1.0, CAMP.LADDER.z+0.4); botGlow.scale.set(2.0,2.0,1); campGroup.add(botGlow);
-  // Plate
   campPlateFill = new THREE.Mesh(new THREE.CircleGeometry(CAMP.PLATE.r,40), MAT.plateRed);
   campPlateFill.rotation.x=-Math.PI/2; campPlateFill.position.set(CAMP.PLATE.x, RM.y+0.025, CAMP.PLATE.z); campGroup.add(campPlateFill);
   campPlateRing = new THREE.Mesh(new THREE.RingGeometry(CAMP.PLATE.r-0.14, CAMP.PLATE.r, 40), MAT.plateWarn);
@@ -1986,7 +1978,6 @@ function buildCampaignScene() {
   campWeightSprite.scale.set(6,1.5,1);
   campGroup.add(campWeightSprite);
   drawCampWeight(0);
-  // Door
   const frame=new THREE.Mesh(new THREE.BoxGeometry(4.6,4.0,0.4), MAT.metalDark);
   frame.position.set(0, RM.y+2.0, CAMP.DOOR.z-0.2); campGroup.add(frame);
   campDoorLeftPivot=new THREE.Group();
@@ -2013,7 +2004,6 @@ function buildCampaignScene() {
   sCtx.fillText('REQUIRED', 256, 175);
   const sign=new THREE.Mesh(new THREE.PlaneGeometry(1.4,0.7), new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(signCv),transparent:true}));
   sign.position.set(0, RM.y+4.3, CAMP.DOOR.z+0.05); campGroup.add(sign);
-  // Light
   campLightGroup=new THREE.Group();
   campLightGroup.position.set(CAMP.LIGHT.x, RM.y+1.5, CAMP.LIGHT.z);
   campLightGroup.visible=false;
@@ -2160,7 +2150,6 @@ function updateCampZombies(dt) {
     z.armPivots[0].rotation.x = -1.30 + Math.sin(z.swayPhase)*0.24;
     z.armPivots[1].rotation.x = -1.30 - Math.sin(z.swayPhase)*0.24;
   }
-  // separation
   for (let i=0;i<campZombies.length;i++){
     const a = campZombies[i]; if (a.state !== 'chasing') continue;
     for (let j=i+1;j<campZombies.length;j++){
@@ -2582,108 +2571,501 @@ function makeMuzzleAndFlash(g, z, y, color, scale) {
   return { muzzle: muzzle, flash: flash, light: light };
 }
 
+/* --- SMG (detailed, from original script) --- */
 function buildSMGViewmodel() {
   const g = new THREE.Group();
-  const b = new THREE.MeshPhongMaterial({ color: 0x1a1a20, shininess: 80, specular: 0x555566 });
-  const d = new THREE.MeshPhongMaterial({ color: 0x0c0c10, shininess: 50, specular: 0x444455 });
-  const a = new THREE.MeshPhongMaterial({ color: 0x353540, shininess: 100, specular: 0x888899 });
-  g.add(meshAt(new THREE.BoxGeometry(0.10, 0.15, 0.36), b, 0, 0.02, -0.10));
-  g.add(meshAt(new THREE.BoxGeometry(0.055, 0.022, 0.28), a, 0, 0.115, -0.10));
-  const s = new THREE.Mesh(new THREE.CylinderGeometry(0.036, 0.036, 0.13, 10), d); s.rotation.x = Math.PI/2; s.position.set(0, 0.03, -0.345); g.add(s);
-  const ba = new THREE.Mesh(new THREE.CylinderGeometry(0.017, 0.017, 0.11, 8), d); ba.rotation.x = Math.PI/2; ba.position.set(0, 0.03, -0.465); g.add(ba);
-  g.add(meshAt(new THREE.BoxGeometry(0.058, 0.26, 0.075), d, 0, -0.21, -0.08));
-  g.add(meshAt(new THREE.BoxGeometry(0.068, 0.02, 0.088), a, 0, -0.335, -0.08));
-  const gr = meshAt(new THREE.BoxGeometry(0.078, 0.20, 0.10), d, 0, -0.14, 0.06); gr.rotation.x = 0.28; g.add(gr);
-  g.add(meshAt(new THREE.BoxGeometry(0.055, 0.05, 0.18), b, 0, 0.035, 0.16));
+  const bodyMat = new THREE.MeshPhongMaterial({ color: 0x1a1a20, shininess: 80, specular: 0x555566 });
+  const darkerMat = new THREE.MeshPhongMaterial({ color: 0x0c0c10, shininess: 50, specular: 0x444455 });
+  const accentMat = new THREE.MeshPhongMaterial({ color: 0x353540, shininess: 100, specular: 0x888899 });
+  g.add(meshAt(new THREE.BoxGeometry(0.10, 0.15, 0.36), bodyMat, 0, 0.02, -0.10));
+  g.add(meshAt(new THREE.BoxGeometry(0.055, 0.022, 0.28), accentMat, 0, 0.115, -0.10));
+  const shroud = new THREE.Mesh(new THREE.CylinderGeometry(0.036, 0.036, 0.13, 10), darkerMat);
+  shroud.rotation.x = Math.PI / 2; shroud.position.set(0, 0.03, -0.345); g.add(shroud);
+  const barrel = new THREE.Mesh(new THREE.CylinderGeometry(0.017, 0.017, 0.11, 8), darkerMat);
+  barrel.rotation.x = Math.PI / 2; barrel.position.set(0, 0.03, -0.465); g.add(barrel);
+  g.add(meshAt(new THREE.BoxGeometry(0.058, 0.26, 0.075), darkerMat, 0, -0.21, -0.08));
+  g.add(meshAt(new THREE.BoxGeometry(0.068, 0.02, 0.088), accentMat, 0, -0.335, -0.08));
+  for (let i = 0; i < 5; i++) {
+    g.add(meshAt(new THREE.BoxGeometry(0.062, 0.006, 0.002), accentMat, 0, -0.11 - i * 0.045, -0.038));
+  }
+  const grip = meshAt(new THREE.BoxGeometry(0.078, 0.20, 0.10), darkerMat, 0, -0.14, 0.06);
+  grip.rotation.x = 0.28; g.add(grip);
+  const guard = new THREE.Mesh(new THREE.TorusGeometry(0.045, 0.011, 6, 10), bodyMat);
+  guard.rotation.y = Math.PI / 2; guard.position.set(0, -0.075, -0.005); g.add(guard);
+  g.add(meshAt(new THREE.BoxGeometry(0.038, 0.13, 0.055), darkerMat, 0, -0.085, -0.31));
+  g.add(meshAt(new THREE.BoxGeometry(0.055, 0.05, 0.18), bodyMat, 0, 0.035, 0.16));
+  g.add(meshAt(new THREE.BoxGeometry(0.075, 0.10, 0.03), accentMat, 0, 0.03, 0.255));
+  g.add(meshAt(new THREE.BoxGeometry(0.008, 0.045, 0.008), darkerMat, 0, 0.14, -0.335));
+  g.add(meshAt(new THREE.BoxGeometry(0.032, 0.03, 0.015), darkerMat, 0, 0.14, 0.03));
   const mf = makeMuzzleAndFlash(g, -0.52, 0.03, 0xffcc70, 0.35);
   return { group: g, muzzle: mf.muzzle, flash: mf.flash, light: mf.light };
 }
+
+/* --- BURST (detailed, from original script) --- */
 function buildBurstViewmodel() {
   const g = new THREE.Group();
-  const b = new THREE.MeshPhongMaterial({ color: 0x24242a, shininess: 100, specular: 0x666677 });
-  const d = new THREE.MeshPhongMaterial({ color: 0x101015, shininess: 30, specular: 0x444455 });
-  const a = new THREE.MeshPhongMaterial({ color: 0x40404a, shininess: 150, specular: 0xaaaaaa });
-  const w = new THREE.MeshPhongMaterial({ color: 0x5a3518, shininess: 30, specular: 0x885544 });
-  g.add(meshAt(new THREE.BoxGeometry(0.11, 0.16, 0.48), b, 0, 0.02, -0.14));
-  g.add(meshAt(new THREE.BoxGeometry(0.05, 0.05, 0.20), b, 0, 0.155, -0.18));
-  const br = new THREE.Mesh(new THREE.CylinderGeometry(0.017, 0.017, 0.28, 10), d); br.rotation.x = Math.PI/2; br.position.set(0, 0.03, -0.52); g.add(br);
-  g.add(meshAt(new THREE.BoxGeometry(0.095, 0.095, 0.20), w, 0, 0.03, -0.37));
-  const mg = meshAt(new THREE.BoxGeometry(0.062, 0.24, 0.11), d, 0, -0.18, -0.09); mg.rotation.x = -0.22; g.add(mg);
-  const gr = meshAt(new THREE.BoxGeometry(0.082, 0.20, 0.10), d, 0, -0.13, 0.10); gr.rotation.x = 0.30; g.add(gr);
+  const bodyMat = new THREE.MeshPhongMaterial({ color: 0x24242a, shininess: 100, specular: 0x666677 });
+  const darkerMat = new THREE.MeshPhongMaterial({ color: 0x101015, shininess: 30, specular: 0x444455 });
+  const accentMat = new THREE.MeshPhongMaterial({ color: 0x40404a, shininess: 150, specular: 0xaaaaaa });
+  const woodMat = new THREE.MeshPhongMaterial({ color: 0x5a3518, shininess: 30, specular: 0x885544 });
+  g.add(meshAt(new THREE.BoxGeometry(0.11, 0.16, 0.48), bodyMat, 0, 0.02, -0.14));
+  g.add(meshAt(new THREE.BoxGeometry(0.05, 0.05, 0.20), bodyMat, 0, 0.155, -0.18));
+  g.add(meshAt(new THREE.BoxGeometry(0.042, 0.032, 0.02), darkerMat, 0, 0.195, -0.14));
+  g.add(meshAt(new THREE.BoxGeometry(0.035, 0.11, 0.022), darkerMat, 0, 0.16, -0.40));
+  const barrel = new THREE.Mesh(new THREE.CylinderGeometry(0.017, 0.017, 0.28, 10), darkerMat);
+  barrel.rotation.x = Math.PI / 2; barrel.position.set(0, 0.03, -0.52); g.add(barrel);
+  g.add(meshAt(new THREE.BoxGeometry(0.095, 0.095, 0.20), woodMat, 0, 0.03, -0.37));
+  for (let i = 0; i < 6; i++) {
+    g.add(meshAt(new THREE.BoxGeometry(0.10, 0.10, 0.008), accentMat, 0, 0.03, -0.30 - i * 0.03));
+  }
+  g.add(meshAt(new THREE.BoxGeometry(0.048, 0.048, 0.06), darkerMat, 0, 0.03, -0.68));
+  g.add(meshAt(new THREE.BoxGeometry(0.052, 0.012, 0.02), darkerMat, 0, 0.03, -0.65));
+  const mag = meshAt(new THREE.BoxGeometry(0.062, 0.24, 0.11), darkerMat, 0, -0.18, -0.09);
+  mag.rotation.x = -0.22; g.add(mag);
+  const magBase = meshAt(new THREE.BoxGeometry(0.070, 0.015, 0.118), accentMat, 0, -0.30, -0.055);
+  magBase.rotation.x = -0.22; g.add(magBase);
+  const grip = meshAt(new THREE.BoxGeometry(0.082, 0.20, 0.10), darkerMat, 0, -0.13, 0.10);
+  grip.rotation.x = 0.30; g.add(grip);
+  const guard = new THREE.Mesh(new THREE.TorusGeometry(0.05, 0.012, 6, 12), bodyMat);
+  guard.rotation.y = Math.PI / 2; guard.position.set(0, -0.075, 0.04); g.add(guard);
+  g.add(meshAt(new THREE.BoxGeometry(0.062, 0.062, 0.20), darkerMat, 0, 0.03, 0.20));
+  g.add(meshAt(new THREE.BoxGeometry(0.095, 0.14, 0.22), bodyMat, 0, 0.01, 0.30));
+  g.add(meshAt(new THREE.BoxGeometry(0.105, 0.16, 0.035), darkerMat, 0, 0.005, 0.42));
   const mf = makeMuzzleAndFlash(g, -0.72, 0.03, 0xffcc70, 0.55);
   return { group: g, muzzle: mf.muzzle, flash: mf.flash, light: mf.light };
 }
+
+/* --- SHOTGUN (detailed, from original script) --- */
+const sgSteelMat = new THREE.MeshPhongMaterial({ color: 0x2b3038, shininess: 180, specular: 0x8899aa });
+const sgDarkSteelMat = new THREE.MeshPhongMaterial({ color: 0x14171c, shininess: 140, specular: 0x556677 });
+const sgWoodMat = new THREE.MeshPhongMaterial({ color: 0x6b3d20, shininess: 40, specular: 0xaa7766 });
+const sgWoodDarkMat = new THREE.MeshPhongMaterial({ color: 0x4a2814, shininess: 30, specular: 0x885544 });
 function buildShotgunViewModel() {
   const g = new THREE.Group();
-  const sm = new THREE.MeshPhongMaterial({ color: 0x2b3038, shininess: 180, specular: 0x8899aa });
-  const dm = new THREE.MeshPhongMaterial({ color: 0x14171c, shininess: 140, specular: 0x556677 });
-  const wm = new THREE.MeshPhongMaterial({ color: 0x6b3d20, shininess: 40, specular: 0xaa7766 });
-  g.add(meshAt(new THREE.BoxGeometry(0.13, 0.26, 0.52), wm, 0, -0.055, 0.42, 0.04, 0, 0));
-  g.add(meshAt(new THREE.BoxGeometry(0.115, 0.16, 0.32), sm, 0, 0, -0.03));
-  const bar = new THREE.Mesh(new THREE.CylinderGeometry(0.031, 0.031, 0.98, 14), sm); bar.rotation.x = Math.PI/2; bar.position.set(0, 0.035, -0.66); g.add(bar);
-  const mg = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 0.78, 12), dm); mg.rotation.x = Math.PI/2; mg.position.set(0, -0.02, -0.55); g.add(mg);
+  g.add(meshAt(new THREE.BoxGeometry(0.13, 0.26, 0.52), sgWoodMat, 0, -0.055, 0.42, 0.04, 0, 0));
+  g.add(meshAt(new THREE.BoxGeometry(0.135, 0.28, 0.03), sgDarkSteelMat, 0, -0.06, 0.685, 0.04, 0, 0));
+  g.add(meshAt(new THREE.BoxGeometry(0.115, 0.16, 0.32), sgSteelMat, 0, 0, -0.03));
+  const bar = new THREE.Mesh(new THREE.CylinderGeometry(0.031,0.031,0.98,14), sgSteelMat);
+  bar.rotation.x = Math.PI/2; bar.position.set(0, 0.035, -0.66); g.add(bar);
+  const mag = new THREE.Mesh(new THREE.CylinderGeometry(0.025,0.025,0.78,12), sgDarkSteelMat);
+  mag.rotation.x = Math.PI/2; mag.position.set(0, -0.02, -0.55); g.add(mag);
+  const grip = new THREE.Mesh(new THREE.BoxGeometry(0.09, 0.14, 0.16), sgWoodMat);
+  grip.position.set(0, -0.015, 0.14); g.add(grip);
+  const pG = new THREE.Mesh(new THREE.BoxGeometry(0.082, 0.22, 0.11), gripMat);
+  pG.position.set(0, -0.15, 0.02); pG.rotation.x = 0.28; g.add(pG);
   const mf = makeMuzzleAndFlash(g, -1.16, 0.035, 0xfff0a0, 1.0);
   return { group: g, muzzle: mf.muzzle, flash: mf.flash, light: mf.light };
 }
+
+/* --- RIFLE (detailed, from original script) --- */
 function buildRifleViewmodel() {
   const g = new THREE.Group();
-  const b = new THREE.MeshPhongMaterial({ color: 0x2a2d33, shininess: 120, specular: 0x8899bb });
-  const d = new THREE.MeshPhongMaterial({ color: 0x101216, shininess: 70, specular: 0x445566 });
-  const a = new THREE.MeshPhongMaterial({ color: 0x4c525b, shininess: 200, specular: 0xdddddd });
-  g.add(meshAt(new THREE.BoxGeometry(0.10, 0.135, 0.50), b, 0, 0.02, -0.10));
-  g.add(meshAt(new THREE.BoxGeometry(0.078, 0.028, 0.46), a, 0, 0.102, -0.10));
-  const sc = new THREE.Mesh(new THREE.CylinderGeometry(0.040, 0.040, 0.30, 14), d); sc.rotation.x = Math.PI/2; sc.position.set(0, 0.185, -0.14); g.add(sc);
-  const ob = new THREE.Mesh(new THREE.CylinderGeometry(0.052, 0.042, 0.07, 14), d); ob.rotation.x = Math.PI/2; ob.position.set(0, 0.185, -0.315); g.add(ob);
-  const br = new THREE.Mesh(new THREE.CylinderGeometry(0.019, 0.019, 0.42, 12), d); br.rotation.x = Math.PI/2; br.position.set(0, 0.028, -0.70); g.add(br);
-  const mg = meshAt(new THREE.BoxGeometry(0.066, 0.27, 0.108), d, 0, -0.205, -0.07); mg.rotation.x = -0.30; g.add(mg);
+  const bodyMat  = new THREE.MeshPhongMaterial({ color: 0x2a2d33, shininess: 120, specular: 0x8899bb });
+  const darkMat  = new THREE.MeshPhongMaterial({ color: 0x101216, shininess: 70,  specular: 0x445566 });
+  const accentMat= new THREE.MeshPhongMaterial({ color: 0x4c525b, shininess: 200, specular: 0xdddddd });
+  const woodMat  = new THREE.MeshPhongMaterial({ color: 0x7a4a24, shininess: 70,  specular: 0xcc9966 });
+  const lensMat  = new THREE.MeshPhongMaterial({ color: 0x2a6a9a, shininess: 300, specular: 0xffffff, emissive: 0x0a1e33 });
+  g.add(meshAt(new THREE.BoxGeometry(0.10, 0.135, 0.50), bodyMat, 0, 0.02, -0.10));
+  g.add(meshAt(new THREE.BoxGeometry(0.078, 0.028, 0.46), accentMat, 0, 0.102, -0.10));
+  for (let i = 0; i < 10; i++) {
+    g.add(meshAt(new THREE.BoxGeometry(0.082, 0.012, 0.012), darkMat, 0, 0.118, 0.08 - i * 0.038));
+  }
+  const scope = new THREE.Mesh(new THREE.CylinderGeometry(0.040, 0.040, 0.30, 14), darkMat);
+  scope.rotation.x = Math.PI / 2; scope.position.set(0, 0.185, -0.14); g.add(scope);
+  const objBell = new THREE.Mesh(new THREE.CylinderGeometry(0.052, 0.042, 0.07, 14), darkMat);
+  objBell.rotation.x = Math.PI / 2; objBell.position.set(0, 0.185, -0.315); g.add(objBell);
+  const eyePiece = new THREE.Mesh(new THREE.CylinderGeometry(0.046, 0.040, 0.06, 14), darkMat);
+  eyePiece.rotation.x = Math.PI / 2; eyePiece.position.set(0, 0.185, 0.025); g.add(eyePiece);
+  const lens = new THREE.Mesh(new THREE.CylinderGeometry(0.048, 0.048, 0.014, 14), lensMat);
+  lens.rotation.x = Math.PI / 2; lens.position.set(0, 0.185, -0.348); g.add(lens);
+  g.add(meshAt(new THREE.BoxGeometry(0.055, 0.07, 0.035), accentMat, 0, 0.135, -0.02));
+  g.add(meshAt(new THREE.BoxGeometry(0.055, 0.07, 0.035), accentMat, 0, 0.135, -0.26));
+  const turret = new THREE.Mesh(new THREE.CylinderGeometry(0.019, 0.019, 0.04, 8), accentMat);
+  turret.position.set(0, 0.228, -0.14); g.add(turret);
+  const wind = new THREE.Mesh(new THREE.CylinderGeometry(0.017, 0.017, 0.035, 8), accentMat);
+  wind.rotation.z = Math.PI / 2; wind.position.set(0.05, 0.185, -0.14); g.add(wind);
+  g.add(meshAt(new THREE.BoxGeometry(0.098, 0.105, 0.24), woodMat, 0, 0.02, -0.42));
+  for (let i = 0; i < 5; i++) {
+    g.add(meshAt(new THREE.BoxGeometry(0.102, 0.014, 0.022), darkMat, 0, 0.058, -0.33 - i * 0.042));
+  }
+  g.add(meshAt(new THREE.BoxGeometry(0.104, 0.112, 0.02), accentMat, 0, 0.02, -0.545));
+  const barrel = new THREE.Mesh(new THREE.CylinderGeometry(0.019, 0.019, 0.42, 12), darkMat);
+  barrel.rotation.x = Math.PI / 2; barrel.position.set(0, 0.028, -0.70); g.add(barrel);
+  for (let i = 0; i < 3; i++) {
+    const ring = new THREE.Mesh(new THREE.TorusGeometry(0.021, 0.0035, 5, 12), accentMat);
+    ring.position.set(0, 0.028, -0.62 - i * 0.06); g.add(ring);
+  }
+  const brake = new THREE.Mesh(new THREE.CylinderGeometry(0.033, 0.033, 0.085, 12), accentMat);
+  brake.rotation.x = Math.PI / 2; brake.position.set(0, 0.028, -0.94); g.add(brake);
+  g.add(meshAt(new THREE.BoxGeometry(0.070, 0.014, 0.025), darkMat, 0, 0.028, -0.92));
+  g.add(meshAt(new THREE.BoxGeometry(0.014, 0.055, 0.014), darkMat, 0, 0.078, -0.80));
+  const mag = meshAt(new THREE.BoxGeometry(0.066, 0.27, 0.108), darkMat, 0, -0.205, -0.07);
+  mag.rotation.x = -0.30; g.add(mag);
+  const magBase = meshAt(new THREE.BoxGeometry(0.073, 0.018, 0.115), accentMat, 0, -0.335, -0.03);
+  magBase.rotation.x = -0.30; g.add(magBase);
+  const grip = meshAt(new THREE.BoxGeometry(0.086, 0.21, 0.10), woodMat, 0, -0.14, 0.10);
+  grip.rotation.x = 0.30; g.add(grip);
+  const guard = new THREE.Mesh(new THREE.TorusGeometry(0.05, 0.012, 6, 12), bodyMat);
+  guard.rotation.y = Math.PI/2; guard.position.set(0, -0.075, 0.04); g.add(guard);
+  g.add(meshAt(new THREE.BoxGeometry(0.012, 0.05, 0.012), accentMat, 0, -0.065, 0.035));
+  g.add(meshAt(new THREE.BoxGeometry(0.092, 0.13, 0.34), woodMat, 0, 0.012, 0.28));
+  g.add(meshAt(new THREE.BoxGeometry(0.10, 0.15, 0.03), darkMat, 0, 0.005, 0.46));
+  g.add(meshAt(new THREE.BoxGeometry(0.062, 0.032, 0.20), woodMat, 0, 0.095, 0.26));
   const mf = makeMuzzleAndFlash(g, -0.99, 0.028, 0xffd070, 0.62);
   return { group: g, muzzle: mf.muzzle, flash: mf.flash, light: mf.light };
 }
+
+/* --- LMG (detailed, from original script) --- */
 function buildLMGViewmodel() {
   const g = new THREE.Group();
-  const b = new THREE.MeshPhongMaterial({ color: 0x23261c, shininess: 90, specular: 0x667755 });
-  const d = new THREE.MeshPhongMaterial({ color: 0x0c0e0a, shininess: 55, specular: 0x334433 });
-  g.add(meshAt(new THREE.BoxGeometry(0.145, 0.175, 0.58), b, 0, 0.02, -0.14));
-  g.add(meshAt(new THREE.BoxGeometry(0.105, 0.035, 0.50), b, 0, 0.117, -0.14));
-  const br = new THREE.Mesh(new THREE.CylinderGeometry(0.028, 0.028, 0.55, 14), d); br.rotation.x = Math.PI/2; br.position.set(0, 0.028, -0.70); g.add(br);
-  g.add(meshAt(new THREE.BoxGeometry(0.10, 0.17, 0.24), d, -0.115, -0.045, -0.13));
+  const bodyMat  = new THREE.MeshPhongMaterial({ color: 0x23261c, shininess: 90,  specular: 0x667755 });
+  const darkMat  = new THREE.MeshPhongMaterial({ color: 0x0c0e0a, shininess: 55,  specular: 0x334433 });
+  const accentMat= new THREE.MeshPhongMaterial({ color: 0x3f4536, shininess: 180, specular: 0xccccbb });
+  const brassMat = new THREE.MeshPhongMaterial({ color: 0x8a6a1e, shininess: 240, specular: 0xffe088, emissive: 0x1a1200 });
+  g.add(meshAt(new THREE.BoxGeometry(0.145, 0.175, 0.58), bodyMat, 0, 0.02, -0.14));
+  g.add(meshAt(new THREE.BoxGeometry(0.105, 0.035, 0.50), accentMat, 0, 0.117, -0.14));
+  g.add(meshAt(new THREE.BoxGeometry(0.17, 0.055, 0.22), darkMat, 0, 0.12, -0.24));
+  g.add(meshAt(new THREE.BoxGeometry(0.175, 0.02, 0.02), accentMat, 0, 0.145, -0.13));
+  g.add(meshAt(new THREE.BoxGeometry(0.045, 0.062, 0.15), bodyMat, 0, 0.185, -0.02));
+  g.add(meshAt(new THREE.BoxGeometry(0.045, 0.03, 0.045), accentMat, 0, 0.215, -0.02));
+  const barrel = new THREE.Mesh(new THREE.CylinderGeometry(0.028, 0.028, 0.55, 14), darkMat);
+  barrel.rotation.x = Math.PI / 2; barrel.position.set(0, 0.028, -0.70); g.add(barrel);
+  const shroud = new THREE.Mesh(new THREE.CylinderGeometry(0.046, 0.046, 0.28, 14), bodyMat);
+  shroud.rotation.x = Math.PI / 2; shroud.position.set(0, 0.028, -0.52); g.add(shroud);
+  for (let i = 0; i < 5; i++) {
+    const ring = new THREE.Mesh(new THREE.TorusGeometry(0.049, 0.009, 6, 16), accentMat);
+    ring.position.set(0, 0.028, -0.40 - i * 0.058); g.add(ring);
+  }
+  for (let i = 0; i < 8; i++) {
+    const a = (i / 8) * Math.PI * 2;
+    const vent = new THREE.Mesh(new THREE.BoxGeometry(0.016, 0.016, 0.20), darkMat);
+    vent.position.set(Math.cos(a) * 0.046, 0.028 + Math.sin(a) * 0.046, -0.52);
+    vent.rotation.z = a; g.add(vent);
+  }
+  const muzzle = new THREE.Mesh(new THREE.CylinderGeometry(0.036, 0.036, 0.10, 12), accentMat);
+  muzzle.rotation.x = Math.PI / 2; muzzle.position.set(0, 0.028, -1.00); g.add(muzzle);
+  g.add(meshAt(new THREE.BoxGeometry(0.016, 0.06, 0.016), darkMat, 0, 0.082, -0.86));
+  g.add(meshAt(new THREE.BoxGeometry(0.10, 0.17, 0.24), darkMat, -0.115, -0.045, -0.13));
+  g.add(meshAt(new THREE.BoxGeometry(0.105, 0.02, 0.245), accentMat, -0.115, 0.045, -0.13));
+  for (let i = 0; i < 6; i++) {
+    const link = meshAt(new THREE.BoxGeometry(0.035, 0.032, 0.048), brassMat, -0.075 + i * 0.006, 0.045 - i * 0.028, -0.10);
+    link.rotation.z = -0.25; g.add(link);
+  }
+  g.add(meshAt(new THREE.BoxGeometry(0.02, 0.03, 0.03), accentMat, -0.165, -0.02, -0.13));
+  const legL = meshAt(new THREE.BoxGeometry(0.022, 0.24, 0.022), darkMat, -0.085, -0.16, -0.60);
+  legL.rotation.z = 0.45; g.add(legL);
+  const legR = meshAt(new THREE.BoxGeometry(0.022, 0.24, 0.022), darkMat, 0.085, -0.16, -0.60);
+  legR.rotation.z = -0.45; g.add(legR);
+  g.add(meshAt(new THREE.BoxGeometry(0.05, 0.03, 0.05), accentMat, 0, -0.055, -0.60));
+  const grip = meshAt(new THREE.BoxGeometry(0.09, 0.21, 0.105), darkMat, 0, -0.15, 0.06);
+  grip.rotation.x = 0.28; g.add(grip);
+  const guard = new THREE.Mesh(new THREE.TorusGeometry(0.052, 0.013, 6, 12), bodyMat);
+  guard.rotation.y = Math.PI/2; guard.position.set(0, -0.082, 0.0); g.add(guard);
+  g.add(meshAt(new THREE.BoxGeometry(0.085, 0.11, 0.22), darkMat, 0, 0.02, 0.24));
+  g.add(meshAt(new THREE.BoxGeometry(0.11, 0.16, 0.05), bodyMat, 0, 0.005, 0.36));
+  g.add(meshAt(new THREE.BoxGeometry(0.115, 0.17, 0.02), accentMat, 0, 0.005, 0.385));
+  g.add(meshAt(new THREE.BoxGeometry(0.06, 0.05, 0.08), accentMat, 0, 0.02, 0.30));
   const mf = makeMuzzleAndFlash(g, -1.06, 0.028, 0xffc060, 0.68);
   return { group: g, muzzle: mf.muzzle, flash: mf.flash, light: mf.light };
 }
+
+/* --- AK47 (detailed, from original script) --- */
 function buildAK47Viewmodel() {
   const g = new THREE.Group();
-  const b = new THREE.MeshPhongMaterial({ color: 0x2b2f36, shininess: 120, specular: 0x7788aa });
-  const d = new THREE.MeshPhongMaterial({ color: 0x111318, shininess: 70, specular: 0x445566 });
-  const w = new THREE.MeshPhongMaterial({ color: 0x8a4a20, shininess: 60, specular: 0xdd9966 });
-  g.add(meshAt(new THREE.BoxGeometry(0.10, 0.14, 0.42), b, 0, 0.02, -0.06));
-  g.add(meshAt(new THREE.BoxGeometry(0.088, 0.05, 0.36), w, 0, 0.095, -0.06));
-  const br = new THREE.Mesh(new THREE.CylinderGeometry(0.017, 0.017, 0.36, 10), d); br.rotation.x = Math.PI/2; br.position.set(0, 0.014, -0.63); g.add(br);
-  const mg = meshAt(new THREE.BoxGeometry(0.070, 0.30, 0.10), d, 0, -0.215, -0.05); mg.rotation.x = -0.42; g.add(mg);
+  const bodyMat  = new THREE.MeshPhongMaterial({ color: 0x2b2f36, shininess: 120, specular: 0x7788aa });
+  const darkMat  = new THREE.MeshPhongMaterial({ color: 0x111318, shininess: 70,  specular: 0x445566 });
+  const accentMat= new THREE.MeshPhongMaterial({ color: 0x4c525b, shininess: 200, specular: 0xdddddd });
+  const woodMat  = new THREE.MeshPhongMaterial({ color: 0x8a4a20, shininess: 60,  specular: 0xdd9966 });
+  const woodDark = new THREE.MeshPhongMaterial({ color: 0x5e3214, shininess: 50,  specular: 0xbb7744 });
+  g.add(meshAt(new THREE.BoxGeometry(0.10, 0.14, 0.42), bodyMat, 0, 0.02, -0.06));
+  g.add(meshAt(new THREE.BoxGeometry(0.088, 0.05, 0.36), accentMat, 0, 0.095, -0.06));
+  g.add(meshAt(new THREE.BoxGeometry(0.036, 0.036, 0.05), darkMat, 0, 0.145, -0.19));
+  const gasTube = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.022, 0.28, 10), darkMat);
+  gasTube.rotation.x = Math.PI / 2; gasTube.position.set(0, 0.078, -0.38); g.add(gasTube);
+  g.add(meshAt(new THREE.BoxGeometry(0.058, 0.08, 0.065), darkMat, 0, 0.058, -0.53));
+  g.add(meshAt(new THREE.BoxGeometry(0.096, 0.088, 0.24), woodMat, 0, -0.022, -0.36));
+  g.add(meshAt(new THREE.BoxGeometry(0.086, 0.058, 0.24), woodDark, 0, 0.045, -0.38));
+  g.add(meshAt(new THREE.BoxGeometry(0.10, 0.115, 0.02), accentMat, 0, 0.012, -0.245));
+  const barrel = new THREE.Mesh(new THREE.CylinderGeometry(0.017, 0.017, 0.36, 10), darkMat);
+  barrel.rotation.x = Math.PI / 2; barrel.position.set(0, 0.014, -0.63); g.add(barrel);
+  g.add(meshAt(new THREE.BoxGeometry(0.032, 0.095, 0.032), darkMat, 0, 0.048, -0.735));
+  const brake = new THREE.Mesh(new THREE.CylinderGeometry(0.027, 0.027, 0.075, 10), accentMat);
+  brake.rotation.x = Math.PI / 2; brake.position.set(0, 0.014, -0.84); g.add(brake);
+  const mag = meshAt(new THREE.BoxGeometry(0.070, 0.30, 0.10), darkMat, 0, -0.215, -0.05);
+  mag.rotation.x = -0.42; g.add(mag);
+  const magBase = meshAt(new THREE.BoxGeometry(0.078, 0.02, 0.11), accentMat, 0, -0.355, 0.012);
+  magBase.rotation.x = -0.42; g.add(magBase);
+  for (let i = 0; i < 4; i++) {
+    const rib = meshAt(new THREE.BoxGeometry(0.074, 0.012, 0.015), accentMat, 0, -0.10 - i * 0.065, -0.078 + i * 0.028);
+    rib.rotation.x = -0.42; g.add(rib);
+  }
+  g.add(meshAt(new THREE.BoxGeometry(0.03, 0.045, 0.03), accentMat, 0, -0.075, -0.03));
+  const grip = meshAt(new THREE.BoxGeometry(0.086, 0.20, 0.105), woodMat, 0, -0.135, 0.10);
+  grip.rotation.x = 0.34; g.add(grip);
+  const guard = new THREE.Mesh(new THREE.TorusGeometry(0.05, 0.012, 6, 12), bodyMat);
+  guard.rotation.y = Math.PI/2; guard.position.set(0, -0.072, 0.04); g.add(guard);
+  g.add(meshAt(new THREE.BoxGeometry(0.012, 0.048, 0.012), accentMat, 0, -0.062, 0.035));
+  g.add(meshAt(new THREE.BoxGeometry(0.014, 0.055, 0.09), accentMat, 0.056, 0.03, -0.02));
+  g.add(meshAt(new THREE.BoxGeometry(0.086, 0.115, 0.30), woodMat, 0, 0.008, 0.26));
+  g.add(meshAt(new THREE.BoxGeometry(0.096, 0.135, 0.03), woodDark, 0, 0.0, 0.42));
+  g.add(meshAt(new THREE.BoxGeometry(0.058, 0.028, 0.16), woodDark, 0, 0.078, 0.24));
   const mf = makeMuzzleAndFlash(g, -0.89, 0.014, 0xffd070, 0.58);
   return { group: g, muzzle: mf.muzzle, flash: mf.flash, light: mf.light };
 }
+
+/* --- SNIPER (detailed, from original script) --- */
 function buildSniperViewmodel() {
   const g = new THREE.Group();
-  const b = new THREE.MeshPhongMaterial({ color: 0x1b1f26, shininess: 140, specular: 0x8899bb });
-  const d = new THREE.MeshPhongMaterial({ color: 0x0b0d10, shininess: 90, specular: 0x445566 });
-  const a = new THREE.MeshPhongMaterial({ color: 0x59606c, shininess: 240, specular: 0xffffff });
-  g.add(meshAt(new THREE.BoxGeometry(0.105, 0.14, 0.60), b, 0, 0.02, -0.14));
-  g.add(meshAt(new THREE.BoxGeometry(0.086, 0.026, 0.56), a, 0, 0.103, -0.14));
-  const sc = new THREE.Mesh(new THREE.CylinderGeometry(0.038, 0.038, 0.34, 16), d); sc.rotation.x = Math.PI/2; sc.position.set(0, 0.205, -0.19); g.add(sc);
-  const bl = new THREE.Mesh(new THREE.CylinderGeometry(0.062, 0.044, 0.10, 18), d); bl.rotation.x = Math.PI/2; bl.position.set(0, 0.205, -0.40); g.add(bl);
-  const br = new THREE.Mesh(new THREE.CylinderGeometry(0.023, 0.023, 0.72, 16), d); br.rotation.x = Math.PI/2; br.position.set(0, 0.028, -0.80); g.add(br);
-  const mf = makeMuzzleAndFlash(g, -1.18, 0.028, 0xffe0a0, 0.95);
+  const bodyMat   = new THREE.MeshPhongMaterial({ color: 0x1b1f26, shininess: 140, specular: 0x8899bb });
+  const darkMat   = new THREE.MeshPhongMaterial({ color: 0x0b0d10, shininess: 90,  specular: 0x445566 });
+  const accentMat = new THREE.MeshPhongMaterial({ color: 0x59606c, shininess: 240, specular: 0xffffff });
+  const stockMat  = new THREE.MeshPhongMaterial({ color: 0x24352a, shininess: 50,  specular: 0x8fbf9f });
+  const lensMat   = new THREE.MeshPhongMaterial({ color: 0x1e86c8, shininess: 500, specular: 0xffffff, emissive: 0x0d3350 });
+  const brassMat  = new THREE.MeshPhongMaterial({ color: 0xb8912a, shininess: 280, specular: 0xffeaa0, emissive: 0x2a1e00 });
+  g.add(meshAt(new THREE.BoxGeometry(0.105, 0.14, 0.60), bodyMat, 0, 0.02, -0.14));
+  g.add(meshAt(new THREE.BoxGeometry(0.108, 0.052, 0.15), darkMat, 0.012, 0.055, -0.10));
+  g.add(meshAt(new THREE.BoxGeometry(0.086, 0.026, 0.56), accentMat, 0, 0.103, -0.14));
+  for (let i = 0; i < 14; i++) {
+    g.add(meshAt(new THREE.BoxGeometry(0.090, 0.010, 0.013), darkMat, 0, 0.118, 0.11 - i * 0.038));
+  }
+  const scopeY = 0.205;
+  const tube = new THREE.Mesh(new THREE.CylinderGeometry(0.038, 0.038, 0.34, 16), darkMat);
+  tube.rotation.x = Math.PI / 2; tube.position.set(0, scopeY, -0.19); g.add(tube);
+  const bell = new THREE.Mesh(new THREE.CylinderGeometry(0.062, 0.044, 0.10, 18), darkMat);
+  bell.rotation.x = Math.PI / 2; bell.position.set(0, scopeY, -0.40); g.add(bell);
+  const shade = new THREE.Mesh(new THREE.CylinderGeometry(0.066, 0.066, 0.09, 18), accentMat);
+  shade.rotation.x = Math.PI / 2; shade.position.set(0, scopeY, -0.495); g.add(shade);
+  const lens = new THREE.Mesh(new THREE.CylinderGeometry(0.060, 0.060, 0.012, 20), lensMat);
+  lens.rotation.x = Math.PI / 2; lens.position.set(0, scopeY, -0.535); g.add(lens);
+  const ocular = new THREE.Mesh(new THREE.CylinderGeometry(0.048, 0.042, 0.075, 16), darkMat);
+  ocular.rotation.x = Math.PI / 2; ocular.position.set(0, scopeY, 0.01); g.add(ocular);
+  const eyeLens = new THREE.Mesh(new THREE.CylinderGeometry(0.044, 0.044, 0.010, 16), lensMat);
+  eyeLens.rotation.x = Math.PI / 2; eyeLens.position.set(0, scopeY, 0.052); g.add(eyeLens);
+  const magRing = new THREE.Mesh(new THREE.TorusGeometry(0.047, 0.008, 6, 18), accentMat);
+  magRing.position.set(0, scopeY, -0.045); g.add(magRing);
+  const elev = new THREE.Mesh(new THREE.CylinderGeometry(0.020, 0.020, 0.045, 10), accentMat);
+  elev.position.set(0, scopeY + 0.052, -0.22); g.add(elev);
+  const wind = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.018, 0.040, 10), accentMat);
+  wind.rotation.z = Math.PI / 2; wind.position.set(0.055, scopeY, -0.22); g.add(wind);
+  g.add(meshAt(new THREE.BoxGeometry(0.056, 0.075, 0.032), accentMat, 0, 0.145, -0.05));
+  g.add(meshAt(new THREE.BoxGeometry(0.056, 0.075, 0.032), accentMat, 0, 0.145, -0.34));
+  const boltBase = new THREE.Mesh(new THREE.CylinderGeometry(0.014, 0.014, 0.10, 8), accentMat);
+  boltBase.rotation.z = Math.PI / 2; boltBase.position.set(0.075, 0.05, -0.055); g.add(boltBase);
+  const boltKnob = new THREE.Mesh(new THREE.SphereGeometry(0.024, 10, 8), accentMat);
+  boltKnob.position.set(0.135, 0.05, -0.055); g.add(boltKnob);
+  const barrelLen = 0.72;
+  const barrelZ = -0.44 - barrelLen / 2;
+  const barrel = new THREE.Mesh(new THREE.CylinderGeometry(0.023, 0.023, barrelLen, 16), darkMat);
+  barrel.rotation.x = Math.PI / 2; barrel.position.set(0, 0.028, barrelZ); g.add(barrel);
+  for (let i = 0; i < 6; i++) {
+    const a = (i / 6) * Math.PI * 2;
+    const fl = new THREE.Mesh(new THREE.BoxGeometry(0.007, 0.007, barrelLen * 0.80), accentMat);
+    fl.position.set(Math.cos(a) * 0.022, 0.028 + Math.sin(a) * 0.022, barrelZ);
+    fl.rotation.z = a; g.add(fl);
+  }
+  const band = new THREE.Mesh(new THREE.TorusGeometry(0.026, 0.006, 6, 16), accentMat);
+  band.position.set(0, 0.028, -0.72); g.add(band);
+  const brakeZ = -0.44 - barrelLen - 0.055;
+  const brake = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 0.11, 14), accentMat);
+  brake.rotation.x = Math.PI / 2; brake.position.set(0, 0.028, brakeZ); g.add(brake);
+  for (let i = 0; i < 4; i++) {
+    g.add(meshAt(new THREE.BoxGeometry(0.074, 0.014, 0.015), darkMat, 0, 0.028 + (i % 2 ? 0.020 : -0.020), brakeZ + 0.035 - i * 0.024));
+  }
+  g.add(meshAt(new THREE.BoxGeometry(0.014, 0.050, 0.014), darkMat, 0, 0.072, -0.86));
+  const mag = meshAt(new THREE.BoxGeometry(0.062, 0.24, 0.115), darkMat, 0, -0.185, -0.10);
+  mag.rotation.x = -0.16; g.add(mag);
+  const magBase = meshAt(new THREE.BoxGeometry(0.070, 0.018, 0.122), accentMat, 0, -0.305, -0.08);
+  magBase.rotation.x = -0.16; g.add(magBase);
+  for (let i = 0; i < 3; i++) {
+    const round = new THREE.Mesh(new THREE.CylinderGeometry(0.010, 0.010, 0.048, 8), brassMat);
+    round.rotation.z = Math.PI / 2;
+    round.position.set(-0.058, 0.055, -0.06 - i * 0.045);
+    g.add(round);
+  }
+  const grip = meshAt(new THREE.BoxGeometry(0.084, 0.20, 0.10), stockMat, 0, -0.13, 0.10);
+  grip.rotation.x = 0.30; g.add(grip);
+  const guard = new THREE.Mesh(new THREE.TorusGeometry(0.05, 0.011, 6, 12), bodyMat);
+  guard.rotation.y = Math.PI / 2; guard.position.set(0, -0.07, 0.04); g.add(guard);
+  g.add(meshAt(new THREE.BoxGeometry(0.012, 0.048, 0.012), accentMat, 0, -0.06, 0.035));
+  g.add(meshAt(new THREE.BoxGeometry(0.092, 0.125, 0.24), stockMat, 0, 0.005, 0.28));
+  g.add(meshAt(new THREE.BoxGeometry(0.108, 0.17, 0.06), stockMat, 0, -0.005, 0.44));
+  g.add(meshAt(new THREE.BoxGeometry(0.066, 0.038, 0.20), stockMat, 0, 0.092, 0.27));
+  g.add(meshAt(new THREE.BoxGeometry(0.115, 0.19, 0.018), darkMat, 0, -0.005, 0.478));
+  g.add(meshAt(new THREE.BoxGeometry(0.05, 0.05, 0.10), darkMat, 0, 0.01, 0.33));
+  g.add(meshAt(new THREE.BoxGeometry(0.085, 0.075, 0.26), darkMat, 0, -0.022, -0.50));
+  const legL = meshAt(new THREE.BoxGeometry(0.018, 0.20, 0.018), darkMat, -0.075, -0.14, -0.62);
+  legL.rotation.z = 0.5; g.add(legL);
+  const legR = meshAt(new THREE.BoxGeometry(0.018, 0.20, 0.018), darkMat, 0.075, -0.14, -0.62);
+  legR.rotation.z = -0.5; g.add(legR);
+  g.add(meshAt(new THREE.BoxGeometry(0.045, 0.026, 0.045), accentMat, 0, -0.048, -0.62));
+  const mf = makeMuzzleAndFlash(g, brakeZ - 0.07, 0.028, 0xffe0a0, 0.95);
   return { group: g, muzzle: mf.muzzle, flash: mf.flash, light: mf.light };
 }
+
+/* --- PUMPKIN LAUNCHER (detailed, from original script) --- */
 function buildPumpkinViewmodel() {
   const g = new THREE.Group();
-  const pb = new THREE.MeshPhongMaterial({ color: 0x5a1e9a, shininess: 180, specular: 0xcc88ff, emissive: 0x1a0530 });
-  const ob = new THREE.MeshPhongMaterial({ color: 0xff8820, shininess: 160, specular: 0xffddaa, emissive: 0x4a1a00 });
-  const tube = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.11, 1.10, 24), pb); tube.rotation.x = Math.PI/2; tube.position.set(0, 0.03, -0.35); g.add(tube);
-  const fm = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.11, 0.14, 24), ob); fm.rotation.x = Math.PI/2; fm.position.set(0, 0.03, -0.96); g.add(fm);
+
+  const purpleBody   = new THREE.MeshPhongMaterial({ color: 0x5a1e9a, shininess: 180, specular: 0xcc88ff, emissive: 0x1a0530 });
+  const purpleDark   = new THREE.MeshPhongMaterial({ color: 0x2a0a4a, shininess: 140, specular: 0x8844cc });
+  const purpleLight  = new THREE.MeshPhongMaterial({ color: 0x8a3ed0, shininess: 240, specular: 0xeeccff, emissive: 0x3a0d5a });
+  const orangeBright = new THREE.MeshPhongMaterial({ color: 0xff8820, shininess: 160, specular: 0xffddaa, emissive: 0x4a1a00 });
+  const orangeDeep   = new THREE.MeshPhongMaterial({ color: 0xc04a10, shininess: 130, specular: 0xffaa66, emissive: 0x3a1000 });
+  const orangeRocket = new THREE.MeshPhongMaterial({ color: 0xff7518, shininess: 180, specular: 0xffcc88, emissive: 0x6a1e00 });
+  const vineGreen    = new THREE.MeshPhongMaterial({ color: 0x3a6a1e, shininess: 60 });
+  const blackMat     = new THREE.MeshBasicMaterial({ color: 0x000000 });
+
+  const mainTube = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.11, 1.10, 24), purpleBody);
+  mainTube.rotation.x = Math.PI / 2;
+  mainTube.position.set(0, 0.03, -0.35);
+  g.add(mainTube);
+
+  const frontMuzzle = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.11, 0.14, 24), orangeBright);
+  frontMuzzle.rotation.x = Math.PI / 2;
+  frontMuzzle.position.set(0, 0.03, -0.96);
+  g.add(frontMuzzle);
+  const muzzleRing = new THREE.Mesh(new THREE.TorusGeometry(0.14, 0.016, 10, 24), purpleLight);
+  muzzleRing.position.set(0, 0.03, -1.02);
+  g.add(muzzleRing);
+
+  const frontOpen = new THREE.Mesh(new THREE.CircleGeometry(0.125, 24), blackMat);
+  frontOpen.rotation.y = Math.PI;
+  frontOpen.position.set(0, 0.03, -1.02);
+  g.add(frontOpen);
+
+  const loadedRocket = new THREE.Group();
+  loadedRocket.position.set(0, 0.03, -0.94);
+  g.add(loadedRocket);
+  const warhead = new THREE.Mesh(new THREE.SphereGeometry(0.115, 16, 12), orangeRocket);
+  warhead.scale.set(1.05, 0.95, 1.0);
+  loadedRocket.add(warhead);
+  for (let i = 0; i < 6; i++) {
+    const a = (i / 6) * Math.PI * 2;
+    const rib = new THREE.Mesh(new THREE.SphereGeometry(0.118, 5, 8, 0, Math.PI * 0.20, 0, Math.PI), orangeDeep);
+    rib.scale.set(1.05, 0.95, 1.0);
+    rib.rotation.y = a;
+    loadedRocket.add(rib);
+  }
+  const rocketStem = new THREE.Mesh(new THREE.CylinderGeometry(0.014, 0.024, 0.05, 6), vineGreen);
+  rocketStem.position.set(0, 0.115, 0);
+  rocketStem.rotation.z = 0.20;
+  loadedRocket.add(rocketStem);
+  const eyeGeom = new THREE.ConeGeometry(0.020, 0.038, 3);
+  const rEyeL = new THREE.Mesh(eyeGeom, blackMat);
+  rEyeL.position.set(-0.045, 0.025, 0.11);
+  rEyeL.rotation.x = -0.2;
+  loadedRocket.add(rEyeL);
+  const rEyeR = rEyeL.clone();
+  rEyeR.position.x = 0.045;
+  loadedRocket.add(rEyeR);
+  const rMouth = new THREE.Mesh(new THREE.BoxGeometry(0.065, 0.014, 0.02), blackMat);
+  rMouth.position.set(0, -0.03, 0.115);
+  loadedRocket.add(rMouth);
+
+  for (let i = 0; i < 3; i++) {
+    const bandZ = -0.05 - i * 0.30;
+    const band = new THREE.Mesh(new THREE.CylinderGeometry(0.115, 0.115, 0.06, 24), orangeBright);
+    band.rotation.x = Math.PI / 2;
+    band.position.set(0, 0.03, bandZ);
+    g.add(band);
+    const bandRing = new THREE.Mesh(new THREE.TorusGeometry(0.115, 0.010, 8, 24), purpleLight);
+    bandRing.position.set(0, 0.03, bandZ - 0.035);
+    g.add(bandRing);
+  }
+
+  const rearExhaust = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.11, 0.16, 24), purpleDark);
+  rearExhaust.rotation.x = Math.PI / 2;
+  rearExhaust.position.set(0, 0.03, 0.28);
+  g.add(rearExhaust);
+  const rearRing = new THREE.Mesh(new THREE.TorusGeometry(0.14, 0.014, 8, 24), orangeBright);
+  rearRing.position.set(0, 0.03, 0.36);
+  g.add(rearRing);
+  const rearOpen = new THREE.Mesh(new THREE.CircleGeometry(0.125, 24), blackMat);
+  rearOpen.position.set(0, 0.03, 0.361);
+  g.add(rearOpen);
+
+  const topRail = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.05, 0.55), orangeBright);
+  topRail.position.set(0, 0.18, -0.30);
+  g.add(topRail);
+  const topRailPurple = new THREE.Mesh(new THREE.BoxGeometry(0.045, 0.03, 0.55), purpleLight);
+  topRailPurple.position.set(0, 0.205, -0.30);
+  g.add(topRailPurple);
+  const frontSight = new THREE.Mesh(new THREE.BoxGeometry(0.014, 0.10, 0.014), orangeBright);
+  frontSight.position.set(0, 0.26, -0.55);
+  g.add(frontSight);
+  const rearSight = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.05, 0.03), purpleDark);
+  rearSight.position.set(0, 0.245, -0.08);
+  g.add(rearSight);
+  const rearSightAperture = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.018, 0.055, 8), blackMat);
+  rearSightAperture.rotation.z = Math.PI / 2;
+  rearSightAperture.position.set(0, 0.245, -0.08);
+  g.add(rearSightAperture);
+
+  const triggerHousing = new THREE.Mesh(new THREE.BoxGeometry(0.13, 0.08, 0.30), purpleDark);
+  triggerHousing.position.set(0, -0.075, 0.05);
+  g.add(triggerHousing);
+  const triggerHousingTrim = new THREE.Mesh(new THREE.BoxGeometry(0.135, 0.015, 0.30), orangeBright);
+  triggerHousingTrim.position.set(0, -0.11, 0.05);
+  g.add(triggerHousingTrim);
+
+  const grip = new THREE.Mesh(new THREE.BoxGeometry(0.085, 0.24, 0.11), purpleBody);
+  grip.position.set(0, -0.19, 0.10);
+  grip.rotation.x = 0.28;
+  g.add(grip);
+  const gripTrim = new THREE.Mesh(new THREE.BoxGeometry(0.09, 0.025, 0.115), orangeBright);
+  gripTrim.position.set(0, -0.28, 0.165);
+  gripTrim.rotation.x = 0.28;
+  g.add(gripTrim);
+  const guard = new THREE.Mesh(new THREE.TorusGeometry(0.05, 0.014, 8, 14), purpleLight);
+  guard.rotation.y = Math.PI / 2;
+  guard.position.set(0, -0.075, 0.04);
+  g.add(guard);
+  const trigger = new THREE.Mesh(new THREE.BoxGeometry(0.014, 0.05, 0.012), orangeDeep);
+  trigger.position.set(0, -0.06, 0.035);
+  g.add(trigger);
+
+  const foreGrip = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.16, 0.07), orangeBright);
+  foreGrip.position.set(0, -0.13, -0.42);
+  foreGrip.rotation.x = -0.15;
+  g.add(foreGrip);
+  const foreGripTrim = new THREE.Mesh(new THREE.BoxGeometry(0.065, 0.03, 0.075), purpleLight);
+  foreGripTrim.position.set(0, -0.21, -0.40);
+  foreGripTrim.rotation.x = -0.15;
+  g.add(foreGripTrim);
+  const foreGripMount = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.06, 0.10), purpleDark);
+  foreGripMount.position.set(0, -0.06, -0.42);
+  g.add(foreGripMount);
+
+  for (let i = 0; i < 3; i++) {
+    const leafSize = 0.04 + i * 0.005;
+    const leaf = new THREE.Mesh(new THREE.ConeGeometry(leafSize, 0.09, 4), vineGreen);
+    leaf.position.set(
+      Math.cos(i * 2.1) * 0.11,
+      0.06 + i * 0.03,
+      -0.15 - i * 0.25
+    );
+    leaf.rotation.z = -0.7 + i * 0.5;
+    leaf.rotation.y = i * 1.2;
+    g.add(leaf);
+  }
+
+  const drumGroup = new THREE.Group();
+  drumGroup.position.set(0, -0.20, 0.18);
+  g.add(drumGroup);
+  const drumBody = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.09, 0.14, 18), purpleDark);
+  drumBody.rotation.z = Math.PI / 2;
+  drumGroup.add(drumBody);
+  const drumRing = new THREE.Mesh(new THREE.TorusGeometry(0.09, 0.012, 8, 20), orangeBright);
+  drumRing.rotation.y = Math.PI / 2;
+  drumGroup.add(drumRing);
+  const drumHub = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 0.16, 12), purpleLight);
+  drumHub.rotation.z = Math.PI / 2;
+  drumGroup.add(drumHub);
+
   const mf = makeMuzzleAndFlash(g, -1.10, 0.03, 0xffa030, 1.15);
   return { group: g, muzzle: mf.muzzle, flash: mf.flash, light: mf.light };
 }
+
 const newGunParts = {};
 newGunParts.smg = buildSMGViewmodel();
 newGunParts.burst = buildBurstViewmodel();
