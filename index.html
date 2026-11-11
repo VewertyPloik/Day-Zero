@@ -522,6 +522,49 @@
   #campPlateHud.show { display:block; }
   #campPlateHud.open { color:#8fff8a; border-color:rgba(150,255,150,0.8);
     text-shadow:0 0 16px rgba(120,255,140,0.9),0 2px 6px #000; background:rgba(5,30,5,0.7); }
+
+  /* PROFILE */
+  #profileScreen { z-index: 36; }
+  #profileScreen .overlayInner { max-width: 430px; }
+  .profileClose { position:absolute; top:-4px; left:0; width:42px; height:42px; border-radius:10px;
+    background:rgba(40,20,10,0.9); border:2px solid rgba(255,180,120,0.55); color:#ffe4c4;
+    display:flex; align-items:center; justify-content:center; cursor:pointer; touch-action:none;
+    font-family:inherit; z-index:3; transition:background 0.15s, border-color 0.15s, transform 0.1s; }
+  .profileClose:hover { background:rgba(80,40,15,0.95); border-color:rgba(255,210,150,0.95); }
+  .profileClose:active { transform:scale(0.94); }
+  .profileClose svg { width:20px; height:20px; display:block; }
+  #profileUsernameWrap { width:100%; padding:12px 16px; background:rgba(30,16,8,0.7);
+    border:2px solid rgba(255,180,120,0.3); border-radius:12px; margin-bottom:14px; }
+  #profileUsernameLabel { color:#8d7867; font-size:9px; font-weight:800; letter-spacing:5px; margin-bottom:7px; text-align:center; }
+  #profileUsernameInput { width:100%; padding:12px 14px; background:rgba(20,10,6,0.9);
+    border:2px solid rgba(255,180,120,0.45); border-radius:9px; color:#ffe4c4; font-size:15px;
+    font-weight:900; letter-spacing:3px; text-align:center; font-family:inherit; outline:none;
+    -webkit-user-select:text; user-select:text; }
+  #profileUsernameInput:focus { border-color:rgba(255,210,150,0.95); box-shadow:0 0 16px rgba(255,150,60,0.45); }
+  #profileBadges { width:100%; display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:8px;
+    padding:2px 20px 2px 2px; max-height:34vh; overflow-y:auto; -webkit-overflow-scrolling:touch;
+    scrollbar-width:thin; scrollbar-color:rgba(255,180,120,0.6) rgba(255,180,120,0.12); }
+  #profileBadges::-webkit-scrollbar { width:8px; }
+  #profileBadges::-webkit-scrollbar-track { background:rgba(255,180,120,0.12); border-radius:4px; }
+  #profileBadges::-webkit-scrollbar-thumb { background:rgba(255,180,120,0.6); border-radius:4px; }
+  .badgeItem { display:flex; align-items:center; justify-content:center; padding:6px;
+    aspect-ratio:1 / 1; min-width:0;
+    background:linear-gradient(135deg, rgba(45,24,13,0.92), rgba(18,9,5,0.92));
+    border:2px solid rgba(255,180,120,0.35); border-radius:12px; color:#ffe4c4;
+    cursor:pointer; touch-action:none; font-family:inherit;
+    transition:transform 0.1s, border-color 0.15s, background 0.15s, opacity 0.15s, box-shadow 0.15s; }
+  .badgeItem:hover { border-color:rgba(255,210,150,0.8); background:linear-gradient(135deg, rgba(80,40,18,0.95), rgba(32,16,8,0.95)); }
+  .badgeItem:active { transform:scale(0.94); }
+  .badgeItem.locked { opacity:0.38; filter:grayscale(0.75); }
+  .badgeItem.selected { border-color:rgba(255,220,140,1); box-shadow:0 0 16px rgba(255,190,70,0.65); }
+  .badgeSvg { width:100%; height:100%; max-width:56px; max-height:56px; display:block; filter:drop-shadow(0 0 6px rgba(255,170,60,0.22)); }
+  .badgeItem.locked .badgeSvg { filter:none; }
+  #badgeDetail { width:100%; margin-top:12px; padding:13px 16px; min-height:74px;
+    background:rgba(30,16,8,0.7); border:2px solid rgba(255,180,120,0.3); border-radius:12px; }
+  #badgeDetail h3 { color:#ffe0a0; font-size:13px; font-weight:900; letter-spacing:3px; margin-bottom:7px; }
+  #badgeDetail p { color:#b0937c; font-size:10px; letter-spacing:1.3px; line-height:1.7; margin-top:4px; }
+  #badgeDetail p b { color:#ffaa66; letter-spacing:2px; }
+  .badgeDetailHint { color:#8d7867; font-size:10px; font-weight:800; letter-spacing:3px; text-align:center; padding:8px 0; }
 </style>
 </head>
 <body>
@@ -802,6 +845,23 @@
   </div>
 </div>
 
+<div id="profileScreen" class="overlay">
+  <div class="overlayInner">
+    <button id="btnProfileClose" class="profileClose" aria-label="Close profile">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+    </button>
+    <div class="overlayTitle" style="margin-bottom:10px;">PROFILE</div>
+    <div id="profileUsernameWrap">
+      <div id="profileUsernameLabel">USERNAME</div>
+      <input id="profileUsernameInput" maxlength="15" placeholder="user" autocomplete="off" spellcheck="false">
+    </div>
+    <div id="profileBadges"></div>
+    <div id="badgeDetail"></div>
+  </div>
+</div>
+
 <div id="homeScreen">
   <canvas id="previewCanvas"></canvas>
   <div id="previewScrim"></div>
@@ -810,15 +870,11 @@
     <div id="homeTitle">DAY ZERO</div>
     <div id="homeSub">ZOMBIE OUTBREAK</div>
     <div id="homeCoins"><span id="homeCoinBalance">0</span><span>◈</span></div>
-    <div id="ltmBanner">
-      <div id="ltmBannerRow1"><span class="ltmTag">LTM</span><span id="ltmBannerName">PUMPKIN MADNESS</span></div>
-      <div id="ltmBannerSub">LIMITED TIME · 60 SECONDS</div>
-      <div id="ltmBannerTimer">ENDS IN --</div>
-    </div>
     <div id="homeMenu">
       <button class="menuBtn campaignBtn" id="btnCampaign">CAMPAIGN</button>
       <button class="menuBtn" id="btnModeWaves">WAVES</button>
       <button class="menuBtn" id="btnModeShop">INFINITE MODE</button>
+      <button class="menuBtn secondary" id="btnProfile">PROFILE</button>
       <button class="menuBtn secondary" id="btnFreePlay">FREE PLAY</button>
       <button class="menuBtn secondary" id="btnHomeSettings">SETTINGS</button>
     </div>
@@ -884,6 +940,8 @@ const CODES_USED_KEY     = 'day_zero_codes_used_v1';
 const WEAPON_SCROLL_HIDDEN_KEY = 'day_zero_weapon_scroll_hidden_v1';
 const LTM_HIDDEN_KEY = 'day_zero_ltm_hidden_v1';
 const CAMPAIGN_KEY = 'day_zero_campaign_v1';
+const PROFILE_KEY = 'day_zero_profile_v1';
+const BADGES_KEY = 'day_zero_badges_v1';
 
 const COIN_PER_KILL = 1;
 
@@ -2169,7 +2227,13 @@ function damageCampZombie(z, amount, hitPos, isHead) {
   spawnDamageNumber(hitPos, amount, isHead);
   spawnImpact(hitPos, isHead ? 0xffe080 : 0xff7040, isHead ? 0.7 : 0.45);
   playHitSound();
-  if (z.hp <= 0) { z.state = 'dying'; z.deathT = 0; killsThisRun++; }
+  if (z.hp <= 0) {
+    z.state = 'dying'; z.deathT = 0;
+    killsThisRun++;
+    lifetimeKills++;
+    saveLifetimeKills();
+    checkBadges();
+  }
 }
 function turnCampZombieIntoCorpse(z) {
   const px = z.group.position.x, pz = z.group.position.z, ry = z.group.rotation.y;
@@ -2371,6 +2435,11 @@ function completeCampaignLevel() {
   }, 700);
 }
 function resetCampaign() {
+  if (campCarried) {
+    if (campCarried.group.parent) campCarried.group.parent.remove(campCarried.group);
+    campCarried = null;
+    setWeaponVisible(player.currentWeapon);
+  }
   for (const z of campZombies) campGroup.remove(z.group);
   campZombies.length = 0;
   for (const c of campCorpses) campGroup.remove(c.group);
@@ -2447,6 +2516,8 @@ function isBlockedAt(x, z, currentY) {
 let coins = 0;
 let unlockedWeapons = { pistol:true, smg:false, shotgun:false, rifle:false, burst:false, lmg:false, ak47:false, sniper:false };
 let codesUsed = {};
+let profileUsername = 'user';
+let earnedBadges = {};
 
 function loadCoins() { try { coins = parseInt(localStorage.getItem(COINS_KEY) || '0', 10) || 0; } catch (e) { coins = 0; } }
 function saveCoins() { try { localStorage.setItem(COINS_KEY, String(coins)); } catch (e) {} }
@@ -2461,6 +2532,28 @@ function saveWeaponScrollHidden() { try { localStorage.setItem(WEAPON_SCROLL_HID
 function loadLTMHidden() { try { ltmBannerHidden = localStorage.getItem(LTM_HIDDEN_KEY) === '1'; } catch (e) {} }
 function saveLTMHidden() { try { localStorage.setItem(LTM_HIDDEN_KEY, ltmBannerHidden ? '1' : '0'); } catch (e) {} }
 function loadCampaignProgress() { try { campLevel1Complete = localStorage.getItem(CAMPAIGN_KEY) === '1'; } catch (e) { campLevel1Complete = false; } }
+function loadProfile() {
+  try {
+    const raw = localStorage.getItem(PROFILE_KEY);
+    if (raw) {
+      const p = JSON.parse(raw);
+      if (p && typeof p.username === 'string') {
+        profileUsername = (p.username || 'user').slice(0, 15) || 'user';
+      }
+    }
+  } catch (e) { profileUsername = 'user'; }
+}
+function saveProfile() { try { localStorage.setItem(PROFILE_KEY, JSON.stringify({ username: profileUsername })); } catch (e) {} }
+function loadBadges() {
+  try {
+    const raw = localStorage.getItem(BADGES_KEY);
+    if (raw) {
+      const b = JSON.parse(raw);
+      if (b && typeof b === 'object') earnedBadges = b;
+    }
+  } catch (e) { earnedBadges = {}; }
+}
+function saveBadges() { try { localStorage.setItem(BADGES_KEY, JSON.stringify(earnedBadges)); } catch (e) {} }
 
 function addCoins(n) { if (n <= 0) return; coins += n; saveCoins(); updateCoinHUD(); }
 function updateCoinHUD() {
@@ -3203,6 +3296,7 @@ function damageZombie(z, amount, impactPos, isHead) {
   if (z.hp <= 0) {
     z.state = 'dying'; z.deathT = 0; z.fallDir = Math.random() < 0.5 ? -1 : 1;
     killsThisRun++; lifetimeKills++; saveLifetimeKills();
+    checkBadges();
     if (state.mode === 'pumpkin') state.pumpkinKills++;
     if (earnsCoins()) addCoins(z.isBoss ? getBossCoinReward(state.wave) : COIN_PER_KILL);
     if (z.isBoss) for (let k = 0; k < 16; k++) spawnBlood(z.group.position.clone().setY(z.group.position.y + 1.5 + Math.random()*2), 3, false);
@@ -3482,6 +3576,107 @@ function saveLifetimeBosses() { try { localStorage.setItem(LIFETIME_BOSS_KEY, St
 let ltmStats = { bestKills: 0, bestScore: 0, totalKills: 0, totalRuns: 0, totalTime: 0 };
 function loadLTMStats() { try { const raw = localStorage.getItem(LTM_STATS_KEY); if (raw) { const s = JSON.parse(raw); if (s && typeof s === 'object') ltmStats = Object.assign(ltmStats, s); } } catch (e) {} }
 function saveLTMStats() { try { localStorage.setItem(LTM_STATS_KEY, JSON.stringify(ltmStats)); } catch (e) {} }
+
+const BADGE_COLORS = { bronze:'#cd7f32', silver:'#c9d1d9', gold:'#ffd257', diamond:'#b9f2ff', purple:'#a855f7', black:'#000000' };
+const BADGES = [
+  { id:'kill_bronze', name:'Bronze Kill Badge', requirement:'Get 100 total kills', shape:'hex', metal:'bronze', icon:'crosshair', check:function(){ return lifetimeKills >= 100; } },
+  { id:'kill_silver', name:'Silver Kill Badge', requirement:'Get 500 total kills', shape:'hex', metal:'silver', icon:'crosshair', check:function(){ return lifetimeKills >= 500; } },
+  { id:'kill_gold', name:'Gold Kill Badge', requirement:'Get 1K total kills', shape:'hex', metal:'gold', icon:'crosshair', check:function(){ return lifetimeKills >= 1000; } },
+  { id:'kill_diamond', name:'Diamond Kill Badge', requirement:'Get 2K total kills', shape:'hex', metal:'diamond', icon:'crosshair', check:function(){ return lifetimeKills >= 2000; } },
+  { id:'play_bronze', name:'Bronze Playtime Badge', requirement:'Play for 30 minutes', shape:'square', metal:'bronze', icon:'clock', check:function(){ return lifetimeTime >= 1800; } },
+  { id:'play_silver', name:'Silver Player Badge', requirement:'Play for 1 hour', shape:'square', metal:'silver', icon:'clock', check:function(){ return lifetimeTime >= 3600; } },
+  { id:'play_gold', name:'Gold Player Badge', requirement:'Play for 3 hours', shape:'square', metal:'gold', icon:'clock', check:function(){ return lifetimeTime >= 10800; } },
+  { id:'play_diamond', name:'Diamond Player Badge', requirement:'Play for 5 hours', shape:'square', metal:'diamond', icon:'clock', check:function(){ return lifetimeTime >= 18000; } },
+  { id:'pumpkin_2026', name:'Pumpkin Badge 2026', requirement:'Played “Pumpkin Madness” during 2026 while it was available', shape:'circle', metal:'purple', icon:'pumpkin', check:function(){ return ltmStats.totalRuns > 0; } },
+  { id:'weapon_overload', name:'Weapon Overload', requirement:'Unlocked all guns in Infinite Mode', shape:'circle', metal:'black', icon:'gun', check:function(){ return SHOP_WEAPONS.every(function(w){ return !!unlockedWeapons[w.key]; }); } }
+];
+
+function badgeSvg(badge) {
+  const color = BADGE_COLORS[badge.metal] || '#ffd257';
+  let shape = '';
+  if (badge.shape === 'hex') {
+    shape = '<polygon points="32,3 57,17 57,47 32,61 7,47 7,17" fill="#160e0a" stroke="' + color + '" stroke-width="4" stroke-linejoin="round"/>';
+  } else if (badge.shape === 'square') {
+    shape = '<rect x="7" y="7" width="50" height="50" rx="9" fill="#160e0a" stroke="' + color + '" stroke-width="4"/>';
+  } else {
+    shape = '<circle cx="32" cy="32" r="28" fill="#140d1a" stroke="' + color + '" stroke-width="4"/>';
+  }
+  let icon = '';
+  if (badge.icon === 'crosshair') {
+    icon = '<circle cx="32" cy="32" r="10" fill="none" stroke="#ff3b30" stroke-width="3"/>' +
+           '<line x1="32" y1="18" x2="32" y2="46" stroke="#ff3b30" stroke-width="3"/>' +
+           '<line x1="18" y1="32" x2="46" y2="32" stroke="#ff3b30" stroke-width="3"/>' +
+           '<circle cx="32" cy="32" r="2.2" fill="#ff3b30"/>';
+  } else if (badge.icon === 'clock') {
+    icon = '<circle cx="32" cy="32" r="13" fill="none" stroke="' + color + '" stroke-width="3"/>' +
+           '<path d="M32 23v9l6 4" fill="none" stroke="' + color + '" stroke-width="3" stroke-linecap="round"/>';
+  } else if (badge.icon === 'pumpkin') {
+    icon = '<ellipse cx="32" cy="35" rx="16" ry="13" fill="#ff7518" stroke="#c04a10" stroke-width="2"/>' +
+           '<path d="M32 22v26 M24 24c-5 6-5 16 0 22 M40 24c5 6 5 16 0 22" fill="none" stroke="#c04a10" stroke-width="2"/>' +
+           '<path d="M32 22c2-5 7-5 9-2" fill="none" stroke="#3a6a1e" stroke-width="3" stroke-linecap="round"/>';
+  } else if (badge.icon === 'gun') {
+    icon = '<path d="M16 28h22l6 5v5h-6l-3 4H26l-3-4h-7z" fill="#fff"/>' +
+           '<rect x="18" y="40" width="7" height="10" rx="2" fill="#fff"/>' +
+           '<rect x="38" y="30" width="12" height="4" fill="#fff"/>';
+  }
+  return '<svg class="badgeSvg" viewBox="0 0 64 64" aria-hidden="true">' + shape + icon + '</svg>';
+}
+
+function formatDateTime(ts) {
+  const d = new Date(ts);
+  return d.toLocaleDateString() + ' ' + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
+
+function checkBadges() {
+  let changed = false;
+  for (let i = 0; i < BADGES.length; i++) {
+    const b = BADGES[i];
+    if (!earnedBadges[b.id] && b.check()) {
+      earnedBadges[b.id] = { unlockedAt: Date.now() };
+      changed = true;
+    }
+  }
+  if (changed) {
+    saveBadges();
+    if (profileScreenEl && profileScreenEl.classList.contains('show')) renderProfileBadges();
+  }
+}
+
+function renderProfileBadges() {
+  if (!profileBadgesEl) return;
+  const previouslySelected = (badgeDetailEl && badgeDetailEl.dataset.badgeId) || null;
+  let html = '';
+  for (let i = 0; i < BADGES.length; i++) {
+    const b = BADGES[i];
+    const unlocked = !!earnedBadges[b.id];
+    const selected = previouslySelected === b.id ? ' selected' : '';
+    html += '<button type="button" class="badgeItem' + (unlocked ? '' : ' locked') + selected + '" data-badge="' + b.id + '" title="' + b.name + '">' +
+      badgeSvg(b) + '</button>';
+  }
+  profileBadgesEl.innerHTML = html;
+}
+
+function showBadgeDetail(id) {
+  if (!badgeDetailEl) return;
+  badgeDetailEl.dataset.badgeId = id || '';
+  const items = profileBadgesEl ? profileBadgesEl.querySelectorAll('.badgeItem') : [];
+  for (let i = 0; i < items.length; i++) {
+    items[i].classList.toggle('selected', items[i].dataset.badge === id);
+  }
+  if (!id) {
+    badgeDetailEl.innerHTML = '<div class="badgeDetailHint">TAP A BADGE TO VIEW ITS DETAILS</div>';
+    return;
+  }
+  const badge = BADGES.find(function(b) { return b.id === id; });
+  if (!badge) return;
+  const earned = earnedBadges[badge.id];
+  const when = earned && earned.unlockedAt ? formatDateTime(earned.unlockedAt) : null;
+  badgeDetailEl.innerHTML =
+    '<h3>' + badge.name + '</h3>' +
+    '<p><b>HOW TO EARN</b> ' + badge.requirement + '</p>' +
+    '<p><b>STATUS</b> ' + (when ? 'UNLOCKED ' + when : 'LOCKED') + '</p>';
+}
+
 function loadFreeplayPrefs() {
   try {
     const raw = localStorage.getItem(FREEPLAY_PREFS_KEY); if (!raw) return;
@@ -3636,6 +3831,10 @@ const howToPlayScreenEl = document.getElementById('howToPlayScreen');
 const campPromptEl = document.getElementById('campPrompt');
 const campCarryTagEl = document.getElementById('campCarryTag');
 const campPlateHudEl = document.getElementById('campPlateHud');
+const profileScreenEl = document.getElementById('profileScreen');
+const profileUsernameInputEl = document.getElementById('profileUsernameInput');
+const profileBadgesEl = document.getElementById('profileBadges');
+const badgeDetailEl = document.getElementById('badgeDetail');
 
 let lbActiveTab = 'waves';
 let lastWinEntry = null;
@@ -3742,7 +3941,7 @@ function showHomeScreen() {
   marketScrollEl.classList.remove('show');
   settingsScrollEl.classList.remove('show');
   fpScrollEl.classList.remove('show');
-  [pauseScreenEl, settingsScreenEl, creditsScreenEl, statsScreenEl, leaderboardScreenEl, loadScreenEl, upgradeScreenEl, shopScreenEl, winScreenEl, deathUIEl, freePlayScreenEl, codeScreenEl, targetConfigScreenEl, campaignScreenEl, howToPlayScreenEl].forEach(function (el) { el.classList.remove('show'); });
+  [pauseScreenEl, settingsScreenEl, creditsScreenEl, statsScreenEl, leaderboardScreenEl, loadScreenEl, upgradeScreenEl, shopScreenEl, winScreenEl, deathUIEl, freePlayScreenEl, codeScreenEl, targetConfigScreenEl, campaignScreenEl, howToPlayScreenEl, profileScreenEl].forEach(function (el) { el.classList.remove('show'); });
   homeScreenEl.classList.add('show');
   applyModeVisibility();
   updateLTMBanner();
@@ -3752,10 +3951,36 @@ function showHomeScreen() {
   updateHUD();
 }
 function hideHomeScreen() { homeScreenEl.classList.remove('show'); }
+function openProfileScreen() {
+  checkBadges();
+  profileUsernameInputEl.value = profileUsername;
+  if (badgeDetailEl) badgeDetailEl.dataset.badgeId = '';
+  renderProfileBadges();
+  showBadgeDetail(null);
+  profileScreenEl.classList.add('show');
+}
+function closeProfileScreen() { profileScreenEl.classList.remove('show'); }
 
 document.getElementById('btnModeWaves').addEventListener('pointerdown', function (e) { e.stopPropagation(); try { e.preventDefault(); } catch (err) {} state.mode = 'waves'; applyModeVisibility(); hideHomeScreen(); startNewRun(); setTimeout(requestLock, 60); }, { passive: false });
 document.getElementById('btnModeShop').addEventListener('pointerdown', function (e) { e.stopPropagation(); try { e.preventDefault(); } catch (err) {} state.mode = 'shop'; applyModeVisibility(); hideHomeScreen(); startNewRun(); setTimeout(requestLock, 60); }, { passive: false });
-document.getElementById('ltmBanner').addEventListener('pointerdown', function (e) { e.stopPropagation(); try { e.preventDefault(); } catch (err) {} if (!isLTMActive()) { showBanner('LTM HAS ENDED', 1.8); return; } state.mode = 'pumpkin'; applyModeVisibility(); hideHomeScreen(); startNewRun(); setTimeout(requestLock, 60); }, { passive: false });
+document.getElementById('btnProfile').addEventListener('pointerdown', function (e) { e.stopPropagation(); try { e.preventDefault(); } catch (err) {} openProfileScreen(); }, { passive: false });
+document.getElementById('btnProfileClose').addEventListener('pointerdown', function (e) { e.stopPropagation(); try { e.preventDefault(); } catch (err) {} closeProfileScreen(); }, { passive: false });
+profileUsernameInputEl.addEventListener('input', function () {
+  profileUsername = (profileUsernameInputEl.value || '').slice(0, 15);
+  saveProfile();
+});
+profileUsernameInputEl.addEventListener('blur', function () {
+  if (!profileUsername.trim()) profileUsername = 'user';
+  profileUsername = profileUsername.slice(0, 15);
+  profileUsernameInputEl.value = profileUsername;
+  saveProfile();
+});
+profileBadgesEl.addEventListener('pointerdown', function (e) {
+  e.stopPropagation();
+  const el = e.target && e.target.closest ? e.target.closest('.badgeItem') : null;
+  if (el && el.dataset.badge) showBadgeDetail(el.dataset.badge);
+}, { passive: true });
+
 document.getElementById('btnFreePlay').addEventListener('pointerdown', function (e) { e.stopPropagation(); try { e.preventDefault(); } catch (err) {} openFreePlayScreen(); }, { passive: false });
 document.getElementById('btnHomeSettings').addEventListener('pointerdown', function (e) { e.stopPropagation(); try { e.preventDefault(); } catch (err) {} openSettings(); }, { passive: false });
 document.getElementById('btnCampaign').addEventListener('pointerdown', function (e) { e.stopPropagation(); try { e.preventDefault(); } catch (err) {} openCampaignScreen(); }, { passive: false });
@@ -3925,6 +4150,10 @@ function resetJoystick() { joyPointer = null; lookPointer = null; joyX = 0; joyY
 function clampPitch() { if (player.pitch > 0.85) player.pitch = 0.85; if (player.pitch < -1.15) player.pitch = -1.15; }
 
 window.addEventListener('keydown', function (e) {
+  if (profileScreenEl.classList.contains('show')) {
+    if (e.code === 'Escape') { try { e.preventDefault(); } catch (err) {} closeProfileScreen(); }
+    return;
+  }
   if (codeScreenEl.classList.contains('show')) return;
   if (freePlayScreenEl.classList.contains('show')) return;
   if (campaignScreenEl.classList.contains('show')) return;
@@ -4355,6 +4584,7 @@ function endPumpkinMode() {
   if (kills > ltmStats.bestKills) ltmStats.bestKills = kills;
   if (score > ltmStats.bestScore) ltmStats.bestScore = score;
   saveLTMStats();
+  checkBadges();
   let html = ''; html += '<div class="statRow"><span>Pumpkins Smashed</span><span>' + kills + '</span></div>'; html += '<div class="statRow"><span>Damage Taken</span><span>' + Math.round(damageTaken) + '</span></div>'; html += '<div class="statRow"><span>Best Kills</span><span>' + ltmStats.bestKills + '</span></div>';
   winStatsEl.innerHTML = html; winTitleEl.textContent = 'PUMPKIN MADNESS'; winTitleEl.style.color = '#ffb060'; winScoreBigEl.textContent = String(score); winScoreRankEl.textContent = kills + ' KILLS · ' + rank;
   lastWinEntry = { mode:'pumpkin', name:'', score:score, kills:kills, time:LTM_DURATION, wave:1, date:Date.now() };
@@ -4468,6 +4698,7 @@ function handleShopTap(target) {
     if (coins < item.price) { showBanner('NOT ENOUGH COINS', 1.2); return; }
     coins -= item.price; unlockedWeapons[key] = true;
     saveCoins(); saveUnlocked(); updateCoinHUD(); playCoinSound();
+    checkBadges();
     swapWeapon(key); refreshShopScreen(); refreshWeaponScroll();
   }
 }
@@ -4517,6 +4748,7 @@ function die() {
     ltmStats.totalRuns++; ltmStats.totalKills += kills; ltmStats.totalTime += Math.max(0, (LTM_DURATION - state.pumpkinTime));
     if (kills > ltmStats.bestKills) ltmStats.bestKills = kills; if (score > ltmStats.bestScore) ltmStats.bestScore = score;
     saveLTMStats();
+    checkBadges();
     let html = ''; html += '<div class="statRow"><span>Pumpkins Smashed</span><span>' + kills + '</span></div>'; html += '<div class="statRow"><span>Damage Taken</span><span>' + Math.round(damageTaken) + '</span></div>'; html += '<div class="statRow"><span>Time Survived</span><span>' + Math.max(0, (LTM_DURATION - state.pumpkinTime)).toFixed(1) + 's</span></div>';
     winStatsEl.innerHTML = html; winTitleEl.textContent = 'YOU DIED'; winTitleEl.style.color = '#ff8a80'; winScoreBigEl.textContent = String(score); winScoreRankEl.textContent = kills + ' KILLS · ' + rank;
     lastWinEntry = { mode:'pumpkin', name:'', score:score, kills:kills, time:LTM_DURATION, wave:1, date:Date.now() };
@@ -4584,7 +4816,7 @@ function renderLeaderboard() {
 function escapeHtml(str) { return String(str).replace(/[&<>"']/g, function (c) { return ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[c]; }); }
 
 function cleanupRun() {
-  [deathUIEl, upgradeScreenEl, pauseScreenEl, settingsScreenEl, creditsScreenEl, statsScreenEl, loadScreenEl, winScreenEl, leaderboardScreenEl, shopScreenEl, freePlayScreenEl, codeScreenEl, targetConfigScreenEl, campaignScreenEl, howToPlayScreenEl].forEach(function (el) { el.classList.remove('show'); });
+  [deathUIEl, upgradeScreenEl, pauseScreenEl, settingsScreenEl, creditsScreenEl, statsScreenEl, loadScreenEl, winScreenEl, leaderboardScreenEl, shopScreenEl, freePlayScreenEl, codeScreenEl, targetConfigScreenEl, campaignScreenEl, howToPlayScreenEl, profileScreenEl].forEach(function (el) { el.classList.remove('show'); });
   marketScrollEl.classList.remove('show'); settingsScrollEl.classList.remove('show'); fpScrollEl.classList.remove('show');
   state.rangeCfgOpen = false; state.nearRangeConsole = false;
   fadeEl.style.opacity = '0'; supplyAlertEl.style.opacity = '0';
@@ -4865,7 +5097,9 @@ function update(dt) {
   updateCrates(dt); updatePickups(dt); tickSupplyTimer(dt); updateSupplyArrow(); updateBossBar();
   updateMarketProximity(); updateRangeConsoleProximity(); updateGraveyardFX(dt); updateRangeConsoleFX(dt);
   updatePracticeZombies(dt);
-  if (state.mode === 'campaign') updateCampZombies(dt);
+  if (state.mode === 'campaign' && state.inRun && !state.paused && !state.upgrading && !state.dead && !state.won && !state.shopOpen && !state.rangeCfgOpen) {
+    updateCampZombies(dt);
+  }
   if (!state.paused && !state.upgrading && !state.dead && !state.won && !state.shopOpen && !state.rangeCfgOpen && state.inRun) {
     runTime += dt; lifetimeTime += dt;
     if (state.mode === 'freeplay') updateFreeplaySpawner(dt);
@@ -5028,7 +5262,7 @@ function updatePreview(dt) {
   previewRenderer.render(ps.scene, ps.camera);
 }
 function bindPreviewHover(id, mode) { const el = document.getElementById(id); if (!el) return; el.addEventListener('pointerover', function () { setPreviewMode(mode); }); el.addEventListener('pointerenter', function () { setPreviewMode(mode); }); el.addEventListener('mouseenter', function () { setPreviewMode(mode); }); el.addEventListener('focus', function () { setPreviewMode(mode); }); }
-bindPreviewHover('btnModeWaves', 'waves'); bindPreviewHover('btnModeShop', 'shop'); bindPreviewHover('btnFreePlay', 'waves'); bindPreviewHover('ltmBanner', 'shop');
+bindPreviewHover('btnModeWaves', 'waves'); bindPreviewHover('btnModeShop', 'shop'); bindPreviewHover('btnFreePlay', 'waves');
 
 /* ================== ANIMATE / BOOT ================== */
 function animate() { requestAnimationFrame(animate); const dt = Math.min(clock.getDelta(), 0.05); update(dt); updatePreview(dt); renderer.render(scene, camera); }
@@ -5039,12 +5273,14 @@ try {
   loadLifetimeKills(); loadLifetimeTime(); loadLifetimeDeaths(); loadLifetimeBosses();
   loadSettings(); loadCoins(); loadUnlocked(); loadCodesUsed(); loadLTMStats(); loadFreeplayPrefs();
   loadWeaponScrollHidden(); loadLTMHidden(); loadCampaignProgress();
+  loadProfile(); loadBadges();
   buildCampaignScene();
   musicEnabled = true;
   applyFov();
+  checkBadges();
   updateArrowToggleLabel(); updateMusicToggleLabel(); updateSfxToggleLabel();
   updateDamageToggleLabel(); updateBloodToggleLabel(); updateCoinHUD();
-  setInterval(saveLifetimeTime, 5000);
+  setInterval(function () { saveLifetimeTime(); checkBadges(); }, 5000);
   applyModeVisibility();
   updateLbTabs();
   refreshWeaponScroll();
